@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>프로젝트 히스토리 - 시간순 이력</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Pretendard', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4ecf7 100%);
+            color: #2c3e50;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        .container { max-width: 960px; margin: 0 auto; }
+        h1 { text-align: center; font-size: 28px; color: #2c3e50; margin-bottom: 8px; }
+        .subtitle { text-align: center; color: #7f8c8d; font-size: 14px; margin-bottom: 40px; }
+
+        /* 타임라인 */
+        .timeline {
+            position: relative;
+            padding-left: 36px;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 14px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, #4A90D9, #4CAF50, #F5A623, #9C27B0);
+            border-radius: 2px;
+        }
+
+        .event {
+            position: relative;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 20px 24px;
+            margin-bottom: 20px;
+            transition: box-shadow 0.2s;
+        }
+        .event:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+
+        .event::before {
+            content: '';
+            position: absolute;
+            left: -29px;
+            top: 24px;
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            box-shadow: 0 0 0 2px #4A90D9;
+            background: #4A90D9;
+        }
+        .event.edit::before { background: #4CAF50; box-shadow: 0 0 0 2px #4CAF50; }
+        .event.test::before { background: #F5A623; box-shadow: 0 0 0 2px #F5A623; }
+        .event.feedback::before { background: #9C27B0; box-shadow: 0 0 0 2px #9C27B0; }
+
+        .event-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .timestamp {
+            font-size: 12px;
+            color: #95a5a6;
+            background: #f0f2f5;
+            padding: 3px 10px;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+        .badge {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+        .badge.instruction { background: #EAF6FF; color: #4A90D9; }
+        .badge.change { background: #E8F5E9; color: #388E3C; }
+        .badge.test-badge { background: #FFF8E1; color: #E65100; }
+        .badge.feedback-badge { background: #F3E5F5; color: #7B1FA2; }
+
+        .event-content {
+            font-size: 15px;
+            line-height: 1.7;
+            color: #34495e;
+        }
+        .event-content strong { color: #2c3e50; }
+
+        .code-block {
+            background: #f8f9fb;
+            border: 1px solid #e8ecf1;
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin-top: 10px;
+            font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #495057;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .code-block .added { color: #2e7d32; }
+        .code-block .removed { color: #c62828; text-decoration: line-through; }
+        .code-block .arrow { color: #4CAF50; font-weight: bold; }
+
+        /* 현재 CLAUDE.md 섹션 */
+        .claude-md-section {
+            margin-top: 50px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        .claude-md-header {
+            background: linear-gradient(135deg, #4A90D9, #3F51B5);
+            color: #fff;
+            padding: 20px 28px;
+            font-size: 20px;
+            font-weight: 700;
+        }
+        .claude-md-header small {
+            display: block;
+            font-size: 13px;
+            font-weight: 400;
+            opacity: 0.85;
+            margin-top: 4px;
+        }
+        .claude-md-body {
+            padding: 28px;
+        }
+        .claude-md-body h1 {
+            font-size: 22px;
+            color: #2c3e50;
+            border-bottom: 2px solid #4A90D9;
+            padding-bottom: 8px;
+            margin: 28px 0 14px 0;
+            text-align: left;
+        }
+        .claude-md-body h1:first-child { margin-top: 0; }
+        .claude-md-body h2 {
+            font-size: 17px;
+            color: #4A90D9;
+            margin: 22px 0 10px 0;
+        }
+        .claude-md-body p, .claude-md-body li {
+            font-size: 14px;
+            line-height: 1.8;
+            color: #495057;
+        }
+        .claude-md-body ul {
+            padding-left: 22px;
+            margin: 8px 0;
+        }
+        .claude-md-body .config-line {
+            background: #f0f4f8;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 14px;
+            margin: 4px 0;
+            color: #546e7a;
+        }
+        .claude-md-body table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0;
+            font-size: 13px;
+        }
+        .claude-md-body th {
+            background: #EAF6FF;
+            color: #2c3e50;
+            font-weight: 600;
+            padding: 10px 12px;
+            border: 1px solid #d5e3f0;
+            text-align: left;
+        }
+        .claude-md-body td {
+            padding: 8px 12px;
+            border: 1px solid #e8ecf1;
+            color: #495057;
+        }
+        .claude-md-body code {
+            background: #f0f2f5;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-family: 'SF Mono', 'Consolas', monospace;
+            color: #c62828;
+        }
+        .claude-md-body .goal-item {
+            background: #f8fafd;
+            border-left: 3px solid #4A90D9;
+            padding: 8px 14px;
+            margin: 6px 0;
+            border-radius: 0 6px 6px 0;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #b0b8c1;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Confluence 페이지 자동생성 프로젝트 히스토리</h1>
+    <p class="subtitle">CLAUDE.md 지시사항, 변경 이력, 테스트 기록 — 시간순 (2026.03.05 ~ 03.07)</p>
+
+    <div class="timeline">
+
+        <!-- 1 -->
+        <div class="event test">
+            <div class="event-header">
+                <span class="timestamp">2026-03-05 11:24</span>
+                <span class="badge instruction">지시</span>
+                <span class="badge test-badge">테스트</span>
+            </div>
+            <div class="event-content">
+                <strong>최초 테스트 실행</strong>
+                <br>CLAUDE.md를 보고 지시대로 해줘. 테스트용 링크는 codex 페이지(ARE 스페이스)로 진행.
+                <br>→ CLAUDE.md의 지시에 따라 Confluence 페이지 자동 생성 워크플로우를 처음 시도.
+            </div>
+        </div>
+
+        <!-- 2 -->
+        <div class="event test">
+            <div class="event-header">
+                <span class="timestamp">2026-03-05 11:35 ~ 11:40</span>
+                <span class="badge test-badge">테스트</span>
+            </div>
+            <div class="event-content">
+                <strong>이미지 용량 문제 발견</strong>
+                <br>Child frame 페이지 작업 시 이미지 크기 초과 오류 발생.
+                <br>"이미지들이 용량이 크더라도 진행해줘" / "Image was too large 이 말의 의미가 뭐지?"
+                <br>→ ID 페이지로 대상 변경하여 우회 진행.
+            </div>
+        </div>
+
+        <!-- 3 -->
+        <div class="event">
+            <div class="event-header">
+                <span class="timestamp">2026-03-05 13:34</span>
+                <span class="badge instruction">지시</span>
+            </div>
+            <div class="event-content">
+                <strong>스타일 규칙을 CLAUDE.md에 추가 요청</strong>
+                <br>결과물(domain id turtlesim)의 <strong>글상자와 색감</strong>이 마음에 들어. 이렇게 글상자와 글상자의 색감이 잘 나오도록 CLAUDE.md에 내용을 추가해줘.
+            </div>
+        </div>
+
+        <!-- 4 -->
+        <div class="event edit">
+            <div class="event-header">
+                <span class="timestamp">2026-03-05 13:34</span>
+                <span class="badge change">CLAUDE.md 변경 #1</span>
+            </div>
+            <div class="event-content">
+                <strong>스타일 가이드 전체 추가</strong> — Panel 색상 규칙표, 매크로 목록, 페이지 구성 패턴
+                <div class="code-block"><span class="added">+ # Confluence 페이지 스타일 가이드
++ ## 글상자(Panel) 색상 규칙
+  | 개념 정의/용어 설명 | #EAF6FF | #4A90D9 |
+  | 보충 설명/참고     | #FFF8E1 | #F5A623 |
+  | 토픽 관련          | #E8F5E9 | #4CAF50 |
+  | 서비스 관련        | #F3E5F5 | #9C27B0 |
+  | 액션 관련          | #FFF3E0 | #FF9800 |
+  | 정리/비교          | #E8EAF6 | #3F51B5 |
+  | 실행 결과 설명     | #E3F2FD | (타이틀 없음) |
++ ## 사용할 Confluence 매크로 (panel, expand, info, tip)
++ ## 페이지 구성 패턴 (1~6 항목)</span></div>
+            </div>
+        </div>
+
+        <!-- 5 -->
+        <div class="event">
+            <div class="event-header">
+                <span class="timestamp">2026-03-05 13:36</span>
+                <span class="badge instruction">지시</span>
+            </div>
+            <div class="event-content">
+                <strong>H3 슬라이드 모드 규칙 추가 요청</strong>
+                <br>CLAUDE.md에 다음 내용도 추가해줘. 난 <strong>H3 등급 기준으로 슬라이드 모드</strong>를 사용하기 때문에, 내용이 많아지면 적당한 H3 등급 제목을 추가하도록 해줘.
+            </div>
+        </div>
+
+        <!-- 6 -->
+        <div class="event edit">
+            <div class="event-header">
+                <span class="timestamp">2026-03-05 13:36</span>
+                <span class="badge change">CLAUDE.md 변경 #2</span>
+            </div>
+            <div class="event-content">
+                <strong>H3 제목과 슬라이드 모드 섹션 추가</strong>
+                <div class="code-block"><span class="added">+ ## H3 제목과 슬라이드 모드
++ - 내용이 길어지면 H3 제목을 추가하여 슬라이드 단위를 나눌 것
++ - 개념 설명/코드 설명/실행 결과를 각각 별도 H3로 분리
++ - H3 제목은 섹션 내용을 간결히 요약
++ - H1은 큰 파트 구분용, H3는 슬라이드 단위 구분용</span></div>
+            </div>
+        </div>
+
+        <!-- 7 -->
+        <div class="event">
+            <div class="event-header">
+                <span class="timestamp">2026-03-05 14:12</span>
+                <span class="badge instruction">지시</span>
+            </div>
+            <div class="event-content">
+                <strong>expand → panel 변경 및 H3 필수 규칙 요청</strong>
+                <br>첨부한 그림파일처럼 <strong>펼침(expand)이 아니라 그냥 글상자(panel)로 처리</strong>해줘. 여러 줄의 글상자가 만들어지면 <strong>H3 레벨의 제목을 꼭 달아달라고</strong> CLAUDE.md에 추가해줘.
+            </div>
+        </div>
+
+        <!-- 8 -->
+        <div class="event edit">
+            <div class="event-header">
+                <span class="timestamp">2026-03-05 14:13</span>
+                <span class="badge change">CLAUDE.md 변경 #3</span>
+            </div>
+            <div class="event-content">
+                <strong>expand 매크로 → panel 매크로로 변경</strong> (코드 설명용)
+                <div class="code-block"><span class="removed">- ac:structured-macro ac:name="expand" : 접을 수 있는 상세 설명</span>
+<span class="arrow">↓</span>
+<span class="added">+ ac:structured-macro ac:name="panel" (코드 설명용)
+  : 코드 상세 설명도 펼침(expand)이 아닌 글상자(panel)로 표시</span></div>
+            </div>
+        </div>
+
+        <!-- 9 -->
+        <div class="event edit">
+            <div class="event-header">
+                <span class="timestamp">2026-03-05 14:13</span>
+                <span class="badge change">CLAUDE.md 변경 #4</span>
+            </div>
+            <div class="event-content">
+                <strong>페이지 구성 패턴 3번 항목 수정</strong> — expand → panel, 펼침 사용 금지 명시
+                <div class="code-block"><span class="removed">- 3. 각 섹션별 이미지 아래에 expand 매크로로 코드 설명 추가</span>
+<span class="arrow">↓</span>
+<span class="added">+ 3. 각 섹션별 이미지 아래에 panel 매크로(글상자)로 코드 설명 추가
+     (expand/펼침 사용 금지)</span></div>
+            </div>
+        </div>
+
+        <!-- 10 -->
+        <div class="event edit">
+            <div class="event-header">
+                <span class="timestamp">2026-03-05 14:13</span>
+                <span class="badge change">CLAUDE.md 변경 #5</span>
+            </div>
+            <div class="event-content">
+                <strong>연속 글상자 시 H3 필수 규칙 추가</strong>
+                <div class="code-block"><span class="added">+ - 글상자(panel)가 여러 개 연속으로 나오는 구간에는
+    반드시 H3 제목을 달아서 슬라이드 단위를 구분할 것</span></div>
+            </div>
+        </div>
+
+        <!-- 11 -->
+        <div class="event">
+            <div class="event-header">
+                <span class="timestamp">2026-03-05 14:53</span>
+                <span class="badge instruction">지시</span>
+            </div>
+            <div class="event-content">
+                <strong>첫 번째 히스토리 정리 요청</strong>
+                <br>지금까지 내가 한 지시와 그에 따라 니가 한 행동을 history.html에 한글로 정리해줘.
+            </div>
+        </div>
+
+        <!-- 12 -->
+        <div class="event">
+            <div class="event-header">
+                <span class="timestamp">2026-03-06 08:18</span>
+                <span class="badge instruction">지시</span>
+            </div>
+            <div class="event-content">
+                <strong>블록선도 시각화 요청</strong>
+                <br>전체 자료의 흐름을 <strong>블록선도(flow diagram)로 시각화</strong>했으면 좋겠어. Confluence에 <strong>draw.io</strong>가 설치되어 있는데 그걸 이용할 수는 없을까?
+            </div>
+        </div>
+
+        <!-- 13 -->
+        <div class="event">
+            <div class="event-header">
+                <span class="timestamp">2026-03-06 08:18</span>
+                <span class="badge instruction">지시</span>
+            </div>
+            <div class="event-content">
+                <strong>블록선도 규칙을 CLAUDE.md에 영구 반영 요청</strong>
+                <br>아 그래서, 가능하다면, 그걸 CLAUDE.md에 추가해줘.
+            </div>
+        </div>
+
+        <!-- 14 -->
+        <div class="event edit">
+            <div class="event-header">
+                <span class="timestamp">2026-03-06 08:19</span>
+                <span class="badge change">CLAUDE.md 변경 #6</span>
+            </div>
+            <div class="event-content">
+                <strong>블록선도(flow diagram) 삽입 규칙 추가</strong> — draw.io 매크로 또는 Python 이미지 생성
+                <div class="code-block"><span class="removed">- 1. 상단에 "본 자료의 구성"... 블록선도같은 느낌으로 제시</span>
+<span class="arrow">↓</span>
+<span class="added">+ 1. 상단에 "본 자료의 구성"... 블록선도(flow diagram) 이미지로 시각화
++    - draw.io 매크로 사용 (ac:structured-macro ac:name="drawio")
++    - 둥근 사각형 블록 + 화살표 연결, 밝은 배경 + 진한 테두리
++    - draw.io 불가 시 Python(matplotlib/Pillow)으로 이미지 생성 후 첨부
++    - 텍스트 "A → B → C" 나열 금지. 반드시 시각적 블록선도</span></div>
+            </div>
+        </div>
+
+        <!-- 15 -->
+        <div class="event feedback">
+            <div class="event-header">
+                <span class="timestamp">2026-03-06 08:34</span>
+                <span class="badge feedback-badge">피드백</span>
+            </div>
+            <div class="event-content">
+                <strong>블록선도 품질 피드백</strong>
+                <br>"블록들 간에 연결이 원활하지 않고, 그림이 어색하게 짤렸어"
+                <br>→ matplotlib로 생성한 블록선도의 레이아웃/연결선 품질 개선 필요 확인.
+            </div>
+        </div>
+
+        <!-- 16 -->
+        <div class="event">
+            <div class="event-header">
+                <span class="timestamp">2026-03-07 07:52</span>
+                <span class="badge instruction">지시</span>
+            </div>
+            <div class="event-content">
+                <strong>두 번째 히스토리 정리 요청</strong>
+                <br>CLAUDE.md 파일에서의 지시, CLAUDE.md 파일의 내용 변경, 테스트에 대한 지시들을 로그 기록을 찾아서 history.html을 만들어줘. 밝은 테마로, 시간순으로 작성. 마지막에 현재 CLAUDE.md 전문 포함.
+            </div>
+        </div>
+
+    </div><!-- /timeline -->
+
+    <!-- ===== 현재 CLAUDE.md 전문 ===== -->
+    <div class="claude-md-section">
+        <div class="claude-md-header">
+            현재 CLAUDE.md 전문
+            <small>최종 수정: 2026-03-06 08:19 (Edit #6 이후)</small>
+        </div>
+        <div class="claude-md-body">
+
+            <div class="config-line">conda confluence 환경을 사용할것</div>
+            <div class="config-line">html을 생성할때는 밝은 톤을 사용할것</div>
+            <div class="config-line">confluence_token.txt 파일 내에 있는 confluence token을 사용할것</div>
+
+            <h1># 목표</h1>
+            <div class="goal-item">내가 지정한 글을 보고, 그 글 하위에 동일한 제목에 맨 뒤에 <strong>_{yy.mm}</strong> 규칙으로 날짜를 달아서 새 글을 만들고</div>
+            <div class="goal-item">내가 올려놓은 그림을 보고, 설명들이나 용어의 정의등 수업에 필요하다 판단된 설명들을 추가해줘.</div>
+            <div class="goal-item">그 글에 가장 어울리는 설명들을 추가해줘.</div>
+            <div class="goal-item">단 컨플루언스 페이지에 있는 파일이 <strong>영상이거나 gif 파일은 정보 추출에서는 제외</strong>하는거야. 그러나 새로 만드는 페이지에 해당 위치에 그대로 복사는 되어 있어야해.</div>
+
+            <h1># Confluence 페이지 스타일 가이드</h1>
+
+            <h2>## 글상자(Panel) 색상 규칙</h2>
+            <p>각 주제/섹션별로 구분되는 색상 조합을 사용한다. 배경은 밝은 톤, 타이틀바는 진한 톤으로 한다.</p>
+            <table>
+                <thead>
+                    <tr><th>용도</th><th>bgColor (배경)</th><th>titleBGColor (타이틀바)</th><th>titleColor</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>개념 정의/용어 설명</td><td style="background:#EAF6FF">#EAF6FF (연한 파랑)</td><td style="background:#4A90D9;color:#fff">#4A90D9</td><td>#FFFFFF</td></tr>
+                    <tr><td>보충 설명/참고</td><td style="background:#FFF8E1">#FFF8E1 (연한 노랑)</td><td style="background:#F5A623;color:#fff">#F5A623</td><td>#FFFFFF</td></tr>
+                    <tr><td>토픽 관련</td><td style="background:#E8F5E9">#E8F5E9 (연한 초록)</td><td style="background:#4CAF50;color:#fff">#4CAF50</td><td>#FFFFFF</td></tr>
+                    <tr><td>서비스 관련</td><td style="background:#F3E5F5">#F3E5F5 (연한 보라)</td><td style="background:#9C27B0;color:#fff">#9C27B0</td><td>#FFFFFF</td></tr>
+                    <tr><td>액션 관련</td><td style="background:#FFF3E0">#FFF3E0 (연한 주황)</td><td style="background:#FF9800;color:#fff">#FF9800</td><td>#FFFFFF</td></tr>
+                    <tr><td>정리/비교</td><td style="background:#E8EAF6">#E8EAF6 (연한 남색)</td><td style="background:#3F51B5;color:#fff">#3F51B5</td><td>#FFFFFF</td></tr>
+                    <tr><td>실행 결과 설명</td><td style="background:#E3F2FD">#E3F2FD (연한 하늘)</td><td>- (타이틀 없음)</td><td>-</td></tr>
+                </tbody>
+            </table>
+
+            <h2>## 사용할 Confluence 매크로</h2>
+            <ul>
+                <li><code>ac:structured-macro ac:name="panel"</code> : 색상 글상자 (개념 설명, 결과 해설 등)</li>
+                <li><code>ac:structured-macro ac:name="panel"</code> (코드 설명용) : 코드 상세 설명도 펼침(expand)이 아닌 글상자(panel)로 표시</li>
+                <li><code>ac:structured-macro ac:name="info"</code> : 페이지 상단 안내 문구</li>
+                <li><code>ac:structured-macro ac:name="tip"</code> : 학습 포인트 / 팁</li>
+            </ul>
+
+            <h2>## 페이지 구성 패턴</h2>
+            <ul>
+                <li><strong>1.</strong> 상단에 H3 레벨로 "본 자료의 구성" 이라고 하고, 자료 전체의 흐름을 블록선도(flow diagram) 이미지로 시각화하여 삽입
+                    <ul>
+                        <li>Confluence에 draw.io 앱이 설치되어 있으므로, <code>ac:structured-macro ac:name="drawio"</code> 매크로를 사용하여 블록선도를 직접 페이지에 삽입할 것</li>
+                        <li>블록선도 스타일: 각 단계를 둥근 사각형(rounded rectangle) 블록으로 표현하고, 화살표(→)로 연결. 밝은 배경색과 진한 테두리를 사용하여 가독성 확보</li>
+                        <li>draw.io 매크로 삽입이 불가능한 경우, Python(matplotlib/Pillow 등)으로 블록선도 이미지를 생성한 후 Confluence 페이지에 첨부파일로 업로드하여 <code>ac:image</code>로 삽입할 것</li>
+                        <li>텍스트로만 "A → B → C" 형태로 나열하는 것은 금지. 반드시 시각적 블록선도여야 함</li>
+                    </ul>
+                </li>
+                <li><strong>2.</strong> 핵심 개념을 panel 매크로로 정리 (밝은 배경 + 진한 타이틀바)</li>
+                <li><strong>3.</strong> 각 섹션별 이미지 아래에 panel 매크로(글상자)로 코드 설명 추가 (expand/펼침 사용 금지)</li>
+                <li><strong>4.</strong> 실행 결과 이미지 아래에 panel 매크로(타이틀 없음)로 결과 해설</li>
+                <li><strong>5.</strong> 마지막에 비교 정리표와 tip 매크로로 학습 포인트 정리</li>
+                <li><strong>6.</strong> 표(table)의 헤더 셀에는 해당 섹션 색상의 연한 톤을 background-color로 적용</li>
+            </ul>
+
+            <h2>## H3 제목과 슬라이드 모드</h2>
+            <p>사용자는 Confluence의 슬라이드 모드를 H3 등급 기준으로 사용한다. 따라서:</p>
+            <ul>
+                <li>내용이 길어지거나 표와 같은 내용이 추가되면 적절한 위치에 H3(<code>&lt;h3&gt;</code>) 제목을 추가하여 슬라이드 단위를 나눠줄 것</li>
+                <li>하나의 H3 섹션에 내용이 너무 많이 몰리지 않도록, 개념 설명/코드 설명/실행 결과 등을 각각 별도의 H3로 분리</li>
+                <li>H3 제목은 해당 섹션의 내용을 간결하게 요약하는 형태로 작성 (예: "각 도메인으로 rclpy 초기화", "실행 결과")</li>
+                <li>H1은 큰 파트 구분용, H3는 슬라이드 단위 구분용으로 사용</li>
+                <li>글상자(panel)가 여러 개 연속으로 나오는 구간에는 반드시 H3 제목을 달아서 슬라이드 단위를 구분할 것</li>
+                <li>모든 문장은 개조식으로 작성할 것</li>
+            </ul>
+
+        </div>
+    </div>
+
+    <p class="footer">Generated on 2026-03-07 | Confluence Page Auto-Generation Project History</p>
+</div>
+</body>
+</html>
