@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Architecture - Hailo YOLOv8 Detection System</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f4f8;
+    color: #1a1a2e;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+  h1 { text-align: center; color: #0d47a1; margin-bottom: 0.3rem; font-size: 1.8rem; }
+  .subtitle { text-align: center; color: #666; margin-bottom: 2.5rem; font-size: 0.95rem; }
+  h2 { color: #1a73e8; margin: 2rem 0 1rem; font-size: 1.3rem; border-bottom: 2px solid #e3edf7; padding-bottom: 0.4rem; }
+  h3 { color: #0d47a1; margin: 1.5rem 0 0.8rem; font-size: 1.05rem; }
+
+  /* ===== Diagram Styles ===== */
+  .diagram {
+    background: #fff;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    overflow-x: auto;
+  }
+  .diagram-title {
+    font-size: 0.8rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; color: #1a73e8; margin-bottom: 1.2rem;
+  }
+
+  /* --- System Overview --- */
+  .sys-overview {
+    display: flex; align-items: center; justify-content: center;
+    gap: 0; flex-wrap: wrap; padding: 1rem 0;
+  }
+  .hw-block {
+    border: 2px solid; border-radius: 12px; padding: 1rem 1.2rem;
+    text-align: center; min-width: 150px; position: relative;
+  }
+  .hw-block .hw-icon { font-size: 1.8rem; margin-bottom: 0.3rem; }
+  .hw-block .hw-name { font-weight: 700; font-size: 0.95rem; }
+  .hw-block .hw-detail { font-size: 0.75rem; color: #666; margin-top: 0.2rem; }
+  .hw-cam { border-color: #43a047; background: #e8f5e9; }
+  .hw-rpi { border-color: #e53935; background: #ffebee; }
+  .hw-hailo { border-color: #1565c0; background: #e3f2fd; }
+  .hw-browser { border-color: #f57c00; background: #fff3e0; }
+  .arrow-h {
+    display: flex; align-items: center; padding: 0 0.3rem;
+    color: #999; font-size: 1.2rem; flex-direction: column;
+  }
+  .arrow-h .arrow-label { font-size: 0.65rem; color: #888; white-space: nowrap; }
+  .arrow-h .arrow-char { font-size: 1.5rem; line-height: 1; }
+
+  /* --- Pipeline Flow --- */
+  .pipeline {
+    display: flex; align-items: stretch; gap: 0;
+    justify-content: center; flex-wrap: wrap; padding: 1rem 0;
+  }
+  .pipe-step {
+    border-radius: 10px; padding: 0.8rem 1rem;
+    text-align: center; min-width: 120px; max-width: 160px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .pipe-step .step-num {
+    font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.05em; opacity: 0.7; margin-bottom: 0.2rem;
+  }
+  .pipe-step .step-name { font-weight: 700; font-size: 0.85rem; }
+  .pipe-step .step-detail { font-size: 0.7rem; margin-top: 0.3rem; opacity: 0.8; }
+  .pipe-step code { font-size: 0.65rem; background: rgba(255,255,255,0.3); padding: 1px 4px; border-radius: 3px; }
+  .s-capture { background: #c8e6c9; color: #1b5e20; }
+  .s-preprocess { background: #fff9c4; color: #f57f17; }
+  .s-infer { background: #bbdefb; color: #0d47a1; }
+  .s-parse { background: #d1c4e9; color: #4527a0; }
+  .s-draw { background: #ffccbc; color: #bf360c; }
+  .s-stream { background: #b2ebf2; color: #006064; }
+  .pipe-arrow { display: flex; align-items: center; color: #bbb; font-size: 1.3rem; padding: 0 0.15rem; }
+
+  /* --- Thread Diagram --- */
+  .thread-diagram {
+    display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;
+    padding: 1rem 0;
+  }
+  .thread-box {
+    border: 2px dashed; border-radius: 12px; padding: 1rem 1.2rem;
+    min-width: 260px; flex: 1; max-width: 400px;
+  }
+  .thread-box .thread-title {
+    font-weight: 700; font-size: 0.9rem; margin-bottom: 0.6rem;
+    padding-bottom: 0.4rem; border-bottom: 1px solid rgba(0,0,0,0.1);
+  }
+  .thread-box ul { list-style: none; padding: 0; }
+  .thread-box li {
+    padding: 0.3rem 0.5rem; margin: 0.25rem 0; border-radius: 6px;
+    font-size: 0.8rem; background: rgba(255,255,255,0.5);
+  }
+  .thread-box li code { font-size: 0.75rem; }
+  .t-inference { border-color: #1565c0; background: #e3f2fd; }
+  .t-inference .thread-title { color: #1565c0; }
+  .t-flask { border-color: #2e7d32; background: #e8f5e9; }
+  .t-flask .thread-title { color: #2e7d32; }
+  .t-client { border-color: #e65100; background: #fff3e0; }
+  .t-client .thread-title { color: #e65100; }
+
+  /* --- Shared State --- */
+  .state-block {
+    background: linear-gradient(135deg, #fce4ec, #f3e5f5);
+    border: 2px solid #ce93d8;
+    border-radius: 10px; padding: 1rem 1.5rem;
+    max-width: 500px; margin: 1rem auto;
+    text-align: center;
+  }
+  .state-block .state-title { font-weight: 700; color: #7b1fa2; margin-bottom: 0.5rem; }
+  .state-fields { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; }
+  .state-field {
+    background: #fff; border: 1px solid #e1bee7; border-radius: 6px;
+    padding: 0.25rem 0.6rem; font-size: 0.75rem; font-family: monospace;
+  }
+
+  /* --- File Structure --- */
+  .file-tree {
+    background: #263238; color: #cfd8dc; border-radius: 10px;
+    padding: 1.2rem 1.5rem; font-family: 'Courier New', monospace;
+    font-size: 0.85rem; line-height: 1.8; white-space: pre;
+  }
+  .file-tree .dir { color: #82b1ff; }
+  .file-tree .py { color: #c5e1a5; }
+  .file-tree .model { color: #ffcc80; }
+  .file-tree .output { color: #ef9a9a; }
+  .file-tree .doc { color: #80cbc4; }
+  .file-tree .comment { color: #78909c; font-style: italic; }
+
+  /* --- API Table --- */
+  .api-table { width: 100%; border-collapse: collapse; margin: 0.5rem 0; }
+  .api-table th {
+    background: #1a73e8; color: #fff; padding: 0.6rem 1rem;
+    text-align: left; font-size: 0.8rem; text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .api-table td {
+    padding: 0.5rem 1rem; border-bottom: 1px solid #e8edf2;
+    font-size: 0.85rem;
+  }
+  .api-table tr:hover td { background: #f5f8ff; }
+  .api-table code {
+    background: #e8edf2; padding: 2px 6px; border-radius: 4px;
+    font-size: 0.8rem;
+  }
+  .method {
+    display: inline-block; padding: 2px 8px; border-radius: 4px;
+    font-size: 0.7rem; font-weight: 700; color: #fff;
+  }
+  .method-get { background: #43a047; }
+  .method-post { background: #fb8c00; }
+
+  /* --- Data Flow Arrow Block --- */
+  .data-flow {
+    display: flex; align-items: center; justify-content: center;
+    gap: 0; padding: 1rem 0; flex-wrap: wrap;
+  }
+  .df-block {
+    border-radius: 8px; padding: 0.5rem 0.8rem;
+    font-size: 0.75rem; font-weight: 600; text-align: center;
+    min-width: 90px;
+  }
+  .df-arrow { color: #999; font-size: 1.2rem; padding: 0 0.2rem; }
+  .df-input { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+  .df-process { background: #e3f2fd; color: #1565c0; border: 1px solid #90caf9; }
+  .df-output { background: #fff3e0; color: #e65100; border: 1px solid #ffcc80; }
+
+  /* --- NMS Output --- */
+  .nms-box {
+    background: #f5f5f5; border: 1px solid #ddd; border-radius: 8px;
+    padding: 1rem; font-family: monospace; font-size: 0.8rem;
+    line-height: 1.6; overflow-x: auto; white-space: pre;
+  }
+  .nms-box .hl { color: #1565c0; font-weight: 700; }
+  .nms-box .cm { color: #999; }
+</style>
+</head>
+<body>
+
+<h1>Hailo-8 YOLOv8 Detection System</h1>
+<p class="subtitle">Raspberry Pi 5 + Hailo-8 NPU + USB Camera &mdash; Code Architecture</p>
+
+<!-- ========== 1. System Overview ========== -->
+<h2>1. System Overview (Hardware)</h2>
+<div class="diagram">
+  <div class="diagram-title">Hardware Block Diagram</div>
+  <div class="sys-overview">
+    <div class="hw-block hw-cam">
+      <div class="hw-icon">&#x1F4F7;</div>
+      <div class="hw-name">USB Camera</div>
+      <div class="hw-detail">Logitech C920<br>640&times;480 @ 30fps<br>/dev/video0</div>
+    </div>
+    <div class="arrow-h">
+      <div class="arrow-label">USB 2.0</div>
+      <div class="arrow-char">&xrarr;</div>
+    </div>
+    <div class="hw-block hw-rpi">
+      <div class="hw-icon">&#x1F4BB;</div>
+      <div class="hw-name">Raspberry Pi 5</div>
+      <div class="hw-detail">Debian trixie<br>Python 3 + OpenCV<br>Flask Server</div>
+    </div>
+    <div class="arrow-h">
+      <div class="arrow-label">PCIe</div>
+      <div class="arrow-char">&xlarr;&xrarr;</div>
+    </div>
+    <div class="hw-block hw-hailo">
+      <div class="hw-icon">&#x1F9E0;</div>
+      <div class="hw-name">Hailo-8 NPU</div>
+      <div class="hw-detail">AI Accelerator<br>YOLOv8s (yolov8s_h8.hef)<br>26 TOPS</div>
+    </div>
+    <div style="width:100%; height:0;"></div>
+    <div class="hw-block hw-rpi" style="margin-top:1.5rem; border-color:#1a73e8; background:#e3f2fd;">
+      <div class="hw-icon">&#x1F310;</div>
+      <div class="hw-name">Flask Server</div>
+      <div class="hw-detail">:5000<br>MJPEG + REST API</div>
+    </div>
+    <div class="arrow-h" style="margin-top:1.5rem;">
+      <div class="arrow-label">HTTP / Wi-Fi</div>
+      <div class="arrow-char">&xrarr;</div>
+    </div>
+    <div class="hw-block hw-browser" style="margin-top:1.5rem;">
+      <div class="hw-icon">&#x1F5A5;</div>
+      <div class="hw-name">Web Browser</div>
+      <div class="hw-detail">PC / Mobile<br>실시간 영상 + 결과</div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 2. Inference Pipeline ========== -->
+<h2>2. Inference Pipeline (Per Frame)</h2>
+<div class="diagram">
+  <div class="diagram-title">Frame Processing Pipeline</div>
+  <div class="pipeline">
+    <div class="pipe-step s-capture">
+      <div class="step-num">Step 1</div>
+      <div class="step-name">Capture</div>
+      <div class="step-detail">OpenCV<br><code>VideoCapture(0)</code><br>640&times;480 BGR</div>
+    </div>
+    <div class="pipe-arrow">&rarr;</div>
+    <div class="pipe-step s-preprocess">
+      <div class="step-num">Step 2</div>
+      <div class="step-name">Preprocess</div>
+      <div class="step-detail"><code>cv2.resize</code><br>640&times;640&times;3<br>UINT8</div>
+    </div>
+    <div class="pipe-arrow">&rarr;</div>
+    <div class="pipe-step s-infer">
+      <div class="step-num">Step 3</div>
+      <div class="step-name">Hailo Infer</div>
+      <div class="step-detail"><code>InferVStreams</code><br>YOLOv8s + NMS<br>on NPU</div>
+    </div>
+    <div class="pipe-arrow">&rarr;</div>
+    <div class="pipe-step s-parse">
+      <div class="step-num">Step 4</div>
+      <div class="step-name">Parse NMS</div>
+      <div class="step-detail"><code>parse_nms_output</code><br>80 classes<br>bbox + score</div>
+    </div>
+    <div class="pipe-arrow">&rarr;</div>
+    <div class="pipe-step s-draw">
+      <div class="step-num">Step 5</div>
+      <div class="step-name">Draw</div>
+      <div class="step-detail"><code>draw_detections</code><br>bbox + label<br>+ FPS overlay</div>
+    </div>
+    <div class="pipe-arrow">&rarr;</div>
+    <div class="pipe-step s-stream">
+      <div class="step-num">Step 6</div>
+      <div class="step-name">Stream</div>
+      <div class="step-detail">MJPEG<br><code>/video_feed</code><br>+ JSON API</div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 3. NMS Output Format ========== -->
+<h2>3. Hailo NMS Output Format</h2>
+<div class="diagram">
+  <div class="diagram-title">YOLOv8s NMS Post-Process Output</div>
+  <div class="data-flow" style="margin-bottom:1rem;">
+    <div class="df-block df-input">Input<br><b>640&times;640&times;3</b><br>UINT8</div>
+    <div class="df-arrow">&rarr;</div>
+    <div class="df-block df-process">YOLOv8s<br><b>Backbone+Neck+Head</b></div>
+    <div class="df-arrow">&rarr;</div>
+    <div class="df-block df-process">NMS<br><b>On-chip</b></div>
+    <div class="df-arrow">&rarr;</div>
+    <div class="df-block df-output">Output<br><b>List[80]</b><br>FLOAT32</div>
+  </div>
+  <div class="nms-box">
+<span class="cm">// Output: list of 80 classes (variable-length per class)</span>
+[
+  class_0 (person):  [[<span class="hl">y_min, x_min, y_max, x_max, score</span>], ...]  <span class="cm">← shape (N, 5)</span>
+  class_1 (bicycle): []                                           <span class="cm">← empty = no detection</span>
+  class_2 (car):     []
+  ...
+  class_39 (bottle): [[<span class="hl">0.50, 0.47, 0.63, 0.51, 0.44</span>]]           <span class="cm">← 1 detection</span>
+  ...
+  class_73 (book):   [[...], [...], [...]]                        <span class="cm">← 3 detections</span>
+  ...
+]
+<span class="cm">// Coordinates: normalized [0, 1] → multiply by img_w, img_h for pixels</span>
+  </div>
+</div>
+
+<!-- ========== 4. Threading Model ========== -->
+<h2>4. Threading Model (flask_yolo_app.py)</h2>
+<div class="diagram">
+  <div class="diagram-title">Multi-Thread Architecture</div>
+  <div class="thread-diagram">
+    <div class="thread-box t-inference">
+      <div class="thread-title">Inference Thread (daemon)</div>
+      <ul>
+        <li><b>Hailo VDevice</b> 초기화 + HEF 로드</li>
+        <li><b>inference_loop()</b> &mdash; 무한 루프</li>
+        <li>OpenCV <code>VideoCapture</code> 프레임 읽기</li>
+        <li><code>cv2.resize()</code> 640&times;640 전처리</li>
+        <li><code>pipeline.infer()</code> Hailo NPU 추론</li>
+        <li><code>parse_nms_output()</code> 결과 파싱</li>
+        <li><code>draw_detections()</code> 오버레이</li>
+        <li>Lock 획득 &rarr; <b>DetectionState</b> 갱신</li>
+      </ul>
+    </div>
+    <div class="thread-box t-flask">
+      <div class="thread-title">Flask Main Thread</div>
+      <ul>
+        <li><code>app.run()</code> HTTP 서버 (포트 5000)</li>
+        <li><code>GET /</code> &rarr; HTML 페이지 반환</li>
+        <li><code>GET /video_feed</code> &rarr; MJPEG 스트림 생성</li>
+        <li><code>GET /detections</code> &rarr; JSON 감지 결과</li>
+        <li><code>GET /sources</code> &rarr; 소스 목록 (MP4 스캔)</li>
+        <li><code>POST /set_source</code> &rarr; 소스 전환 + restart_flag</li>
+        <li><code>generate_mjpeg()</code> &mdash; State에서 프레임 읽어 전송</li>
+      </ul>
+    </div>
+    <div class="thread-box t-client">
+      <div class="thread-title">Browser Client (JavaScript)</div>
+      <ul>
+        <li><code>&lt;img src="/video_feed"&gt;</code> MJPEG 수신</li>
+        <li><code>setInterval(300ms)</code> &rarr; <code>/detections</code> 폴링</li>
+        <li>FPS 배지, 감지 목록, 클래스 카운트 업데이트</li>
+        <li><code>loadSources()</code> &rarr; 드롭다운 채우기</li>
+        <li><code>changeSource()</code> &rarr; POST로 소스 변경 요청</li>
+      </ul>
+    </div>
+  </div>
+  <div class="state-block">
+    <div class="state-title">DetectionState (Shared, Thread-Safe)</div>
+    <div class="state-fields">
+      <div class="state-field">lock: threading.Lock</div>
+      <div class="state-field">frame: np.ndarray</div>
+      <div class="state-field">detections: list[dict]</div>
+      <div class="state-field">fps: float</div>
+      <div class="state-field">source: str</div>
+      <div class="state-field">restart_flag: bool</div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 5. API Endpoints ========== -->
+<h2>5. REST API Endpoints</h2>
+<div class="diagram">
+  <table class="api-table">
+    <thead>
+      <tr><th>Endpoint</th><th>Method</th><th>Response</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>/</code></td>
+        <td><span class="method method-get">GET</span></td>
+        <td>HTML</td>
+        <td>웹 UI 메인 페이지</td>
+      </tr>
+      <tr>
+        <td><code>/video_feed</code></td>
+        <td><span class="method method-get">GET</span></td>
+        <td>MJPEG Stream</td>
+        <td>실시간 영상 스트림 (bbox 오버레이 포함)</td>
+      </tr>
+      <tr>
+        <td><code>/detections</code></td>
+        <td><span class="method method-get">GET</span></td>
+        <td>JSON</td>
+        <td><code>{fps, source, detections[{class_name, confidence, bbox}]}</code></td>
+      </tr>
+      <tr>
+        <td><code>/sources</code></td>
+        <td><span class="method method-get">GET</span></td>
+        <td>JSON</td>
+        <td>사용 가능한 비디오 소스 목록 (카메라 + MP4 파일)</td>
+      </tr>
+      <tr>
+        <td><code>/set_source</code></td>
+        <td><span class="method method-post">POST</span></td>
+        <td>JSON</td>
+        <td>비디오 소스 전환. Body: <code>{"source": "camera"}</code></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ========== 6. File Structure ========== -->
+<h2>6. File Structure</h2>
+<div class="diagram">
+  <div class="file-tree">
+<span class="dir">/home/pw/ws/</span>
+├── <span class="py">flask_yolo_app.py</span>       <span class="comment"># Flask 웹 서버 (메인 애플리케이션)</span>
+│   ├── <span class="comment">DetectionState        — 스레드 간 공유 상태 클래스</span>
+│   ├── <span class="comment">inference_loop()      — Hailo 추론 스레드 (캡처→추론→오버레이)</span>
+│   ├── <span class="comment">parse_nms_output()    — NMS 출력 파싱 (80 클래스 × N 감지)</span>
+│   ├── <span class="comment">draw_detections()     — bbox + label 그리기 (OpenCV)</span>
+│   ├── <span class="comment">generate_mjpeg()      — MJPEG 스트림 제너레이터</span>
+│   └── <span class="comment">Flask Routes          — /, /video_feed, /detections, /sources, /set_source</span>
+│
+├── <span class="py">hailo_yolo_cam.py</span>      <span class="comment"># CLI 버전 (5초 녹화 + 스냅샷)</span>
+│   ├── <span class="comment">main()                — 카메라 캡처 → Hailo 추론 → MP4 저장</span>
+│   ├── <span class="comment">parse_nms_output()    — (flask 버전과 동일 로직)</span>
+│   └── <span class="comment">draw_detections()     — (flask 버전과 동일 로직)</span>
+│
+├── <span class="output">hailo_yolo_output.mp4</span>  <span class="comment"># 녹화 결과 (5초, 30fps)</span>
+├── <span class="output">hailo_yolo_snapshot.jpg</span> <span class="comment"># 대표 스냅샷 (bbox 포함)</span>
+├── <span class="doc">HAILO_YOLO_GUIDE.md</span>    <span class="comment"># 사용 가이드</span>
+├── <span class="doc">architecture.html</span>      <span class="comment"># 이 파일 (아키텍처 문서)</span>
+│
+<span class="dir">/usr/share/hailo-models/</span>
+└── <span class="model">yolov8s_h8.hef</span>         <span class="comment"># YOLOv8s 컴파일된 모델 (Hailo-8용)</span>
+  </div>
+</div>
+
+<!-- ========== 7. Source Switching ========== -->
+<h2>7. Video Source Switching Flow</h2>
+<div class="diagram">
+  <div class="diagram-title">Source Change Sequence</div>
+  <div class="pipeline">
+    <div class="pipe-step" style="background:#fff3e0; color:#e65100; border:1px solid #ffcc80;">
+      <div class="step-num">1</div>
+      <div class="step-name">Browser</div>
+      <div class="step-detail">드롭다운 선택<br><code>changeSource()</code></div>
+    </div>
+    <div class="pipe-arrow">&rarr;</div>
+    <div class="pipe-step" style="background:#e8f5e9; color:#2e7d32; border:1px solid #a5d6a7;">
+      <div class="step-num">2</div>
+      <div class="step-name">POST</div>
+      <div class="step-detail"><code>/set_source</code><br>{"source": "..."}</div>
+    </div>
+    <div class="pipe-arrow">&rarr;</div>
+    <div class="pipe-step" style="background:#fce4ec; color:#c62828; border:1px solid #ef9a9a;">
+      <div class="step-num">3</div>
+      <div class="step-name">Set Flag</div>
+      <div class="step-detail"><code>state.source = src</code><br><code>restart_flag = True</code></div>
+    </div>
+    <div class="pipe-arrow">&rarr;</div>
+    <div class="pipe-step" style="background:#e3f2fd; color:#1565c0; border:1px solid #90caf9;">
+      <div class="step-num">4</div>
+      <div class="step-name">Inference</div>
+      <div class="step-detail">루프 탈출<br><code>cap.release()</code></div>
+    </div>
+    <div class="pipe-arrow">&rarr;</div>
+    <div class="pipe-step" style="background:#e8f5e9; color:#2e7d32; border:1px solid #a5d6a7;">
+      <div class="step-num">5</div>
+      <div class="step-name">Reopen</div>
+      <div class="step-detail">새 소스로<br><code>VideoCapture()</code></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 8. Key Libraries ========== -->
+<h2>8. Key Dependencies</h2>
+<div class="diagram">
+  <div style="display:flex; gap:1rem; flex-wrap:wrap; justify-content:center;">
+    <div style="background:#e3f2fd; border:1px solid #90caf9; border-radius:8px; padding:0.6rem 1rem; text-align:center;">
+      <div style="font-weight:700; color:#1565c0;">hailo_platform</div>
+      <div style="font-size:0.75rem; color:#666;">HEF, VDevice, InferVStreams<br>Hailo NPU 제어</div>
+    </div>
+    <div style="background:#e8f5e9; border:1px solid #a5d6a7; border-radius:8px; padding:0.6rem 1rem; text-align:center;">
+      <div style="font-weight:700; color:#2e7d32;">OpenCV (cv2)</div>
+      <div style="font-size:0.75rem; color:#666;">카메라 캡처, 리사이즈<br>bbox 그리기, JPEG 인코딩</div>
+    </div>
+    <div style="background:#fff3e0; border:1px solid #ffcc80; border-radius:8px; padding:0.6rem 1rem; text-align:center;">
+      <div style="font-weight:700; color:#e65100;">Flask</div>
+      <div style="font-size:0.75rem; color:#666;">HTTP 서버, 라우팅<br>MJPEG 스트리밍, JSON API</div>
+    </div>
+    <div style="background:#f3e5f5; border:1px solid #ce93d8; border-radius:8px; padding:0.6rem 1rem; text-align:center;">
+      <div style="font-weight:700; color:#7b1fa2;">NumPy</div>
+      <div style="font-size:0.75rem; color:#666;">텐서 처리<br>NMS 출력 파싱</div>
+    </div>
+    <div style="background:#fce4ec; border:1px solid #ef9a9a; border-radius:8px; padding:0.6rem 1rem; text-align:center;">
+      <div style="font-weight:700; color:#c62828;">threading</div>
+      <div style="font-size:0.75rem; color:#666;">추론/서버 스레드 분리<br>Lock 기반 동기화</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

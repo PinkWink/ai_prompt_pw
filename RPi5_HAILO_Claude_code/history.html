@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project History</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #fefefe;
+      color: #333;
+      padding: 2rem;
+      max-width: 960px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    h1 {
+      text-align: center;
+      color: #2c7be5;
+      margin-bottom: 0.5rem;
+      font-size: 2rem;
+    }
+    .subtitle {
+      text-align: center;
+      color: #888;
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+    }
+    .entry {
+      background: #f8fbff;
+      border-left: 4px solid #2c7be5;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .entry .timestamp {
+      font-size: 0.85rem;
+      color: #2c7be5;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .entry h2 {
+      font-size: 1.1rem;
+      color: #1a1a1a;
+      margin-bottom: 0.75rem;
+    }
+    .section-label {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-bottom: 0.3rem;
+    }
+    .label-instruction { background: #e8f4fd; color: #1a73e8; }
+    .label-analysis   { background: #fef3e2; color: #e8a01a; }
+    .label-process    { background: #e6f9ed; color: #1aab5c; }
+    .label-result     { background: #f0e6ff; color: #7c3aed; }
+    .content-block {
+      background: #fff;
+      border: 1px solid #eee;
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 0.75rem;
+      font-size: 0.95rem;
+      white-space: pre-wrap;
+    }
+    .content-block img {
+      max-width: 100%;
+      border-radius: 6px;
+      margin-top: 0.5rem;
+    }
+    hr { border: none; border-top: 1px solid #eee; margin: 2rem 0; }
+  </style>
+</head>
+<body>
+
+<h1>Project History</h1>
+<p class="subtitle">All instructions, analysis, and work processes are recorded here chronologically.</p>
+
+<hr>
+
+<!-- Entry 1 -->
+<div class="entry">
+  <div class="timestamp">2026-03-10 (Project Start)</div>
+  <h2>History Logging System Setup</h2>
+
+  <div class="section-label label-instruction">Instruction (Original)</div>
+  <div class="content-block">지금 이 프로젝트의 목적 중 하나는 이 프로젝트를 수행하는 과정을 잘 기록해서, 공유하는 용도로도 사용할거야. 그래서 내가 하는 모든 지시는 지금부터 원문 그대로, 니가 내말을 듣고 정리한 내용, 니가한 작업의 과정을 모두 history.html을 만들어서 기록해줘. 이때 history.html은 밝은 톤으로 해주고, 시간의 흐름대로 정리해주고, 지시, 분석, 과정을 시간과 함께 기록 정리해줘. 특히 성공한 증거는 스크린샷으로 파일명에 날짜와 시간을 넣어서 history_img라는 폴더에 이미지를 저장하고, history.html에도 해당 이미지가 보이도록 해야해. 이렇게 항상 이 프로젝트에서는 작업을 하도록, CLAUDE.md에 정리해줘.</div>
+
+  <div class="section-label label-analysis">Analysis</div>
+  <div class="content-block">User requests a project-wide logging system:
+- Every instruction must be recorded verbatim in history.html
+- Include Claude's analysis and full work process with timestamps
+- Bright, chronological HTML layout
+- Success evidence saved as timestamped screenshots in history_img/
+- Screenshots embedded in history.html
+- Rules codified in CLAUDE.md so they persist across sessions</div>
+
+  <div class="section-label label-process">Process</div>
+  <div class="content-block">1. Checked project root - found no existing CLAUDE.md or history.html
+2. Created history_img/ directory for screenshot storage
+3. Created CLAUDE.md with logging rules for all future tasks
+4. Created history.html with bright, clean design and this first entry</div>
+
+  <div class="section-label label-result">Result</div>
+  <div class="content-block">Setup complete:
+- /home/pw/ws/CLAUDE.md (project rules)
+- /home/pw/ws/history.html (this file)
+- /home/pw/ws/history_img/ (screenshot folder, empty for now)</div>
+</div>
+
+<!-- Entry 2 -->
+<div class="entry">
+  <div class="timestamp">2026-03-10 20:28</div>
+  <h2>Screenshot Test - history.html Preview</h2>
+
+  <div class="section-label label-instruction">Instruction (Original)</div>
+  <div class="content-block">좋아. 이제 테스트삼아 history.html을 웹브라우저로 열어서, 스크린샷을 찍어봐</div>
+
+  <div class="section-label label-analysis">Analysis</div>
+  <div class="content-block">User wants to test the screenshot workflow:
+- Open history.html in a browser
+- Capture a screenshot
+- Save it to history_img/ with timestamped filename
+- Embed the screenshot in this history log</div>
+
+  <div class="section-label label-process">Process</div>
+  <div class="content-block">1. Checked available tools - found Chromium browser and scrot
+2. Used Chromium headless mode to render history.html and capture screenshot
+3. Saved as history_img/screenshot_20260310_202837.png (74KB)
+4. Verified screenshot renders correctly - shows the bright layout with first entry
+5. Added this entry to history.html with embedded screenshot</div>
+
+  <div class="section-label label-result">Result</div>
+  <div class="content-block">Screenshot test successful! The history.html page renders cleanly with bright blue theme, readable layout, and Korean text.
+<img src="history_img/screenshot_20260310_202837.png" alt="history.html screenshot 2026-03-10 20:28"></div>
+</div>
+
+<!-- Entry 3 -->
+<div class="entry">
+  <div class="timestamp">2026-03-10 20:37</div>
+  <h2>Korean Font Installation</h2>
+
+  <div class="section-label label-instruction">Instruction (Original)</div>
+  <div class="content-block">한글이 잘 나오지 않는데? 한글 폰트 문제가 아닐까 ? 그렇다면 폰트를 설치해줘.</div>
+
+  <div class="section-label label-analysis">Analysis</div>
+  <div class="content-block">이전 스크린샷에서 한글이 깨져서 표시됨. 라즈베리파이 시스템에 한글(CJK) 폰트가 설치되어 있지 않아서 발생한 문제. fonts-noto-cjk 패키지를 설치하면 해결 가능.</div>
+
+  <div class="section-label label-process">Process</div>
+  <div class="content-block">1. sudo apt-get install -y fonts-noto-cjk 실행
+2. 폰트 캐시 갱신 (fc-cache -f)
+3. Chromium headless로 history.html 재캡처
+4. 한글이 정상 렌더링되는 것 확인</div>
+
+  <div class="section-label label-result">Result</div>
+  <div class="content-block">fonts-noto-cjk 설치 완료. 한글이 깨끗하게 렌더링됨.
+<img src="history_img/screenshot_20260310_203746.png" alt="Korean font fixed screenshot 2026-03-10 20:37"></div>
+</div>
+
+<!-- Entry 4 -->
+<div class="entry">
+  <div class="timestamp">2026-03-10 20:40</div>
+  <h2>HAILO AI Accelerator Board Check</h2>
+
+  <div class="section-label label-instruction">Instruction (Original)</div>
+  <div class="content-block">현재 넌 라즈베리파이5 버전에서 동작중이야. 거기에는 HAILO 보드가 장착되어있어. 너 혹시 그 보드가 장착되어 있는지 확인할 수 있어?</div>
+
+  <div class="section-label label-analysis">Analysis</div>
+  <div class="content-block">라즈베리파이5에 HAILO AI 가속기 보드가 장착되어 있는지 확인 요청. lspci, dmesg, /dev/hailo*, hailortcli 등으로 하드웨어 인식 여부를 점검.</div>
+
+  <div class="section-label label-process">Process</div>
+  <div class="content-block">1. lspci 실행 → Hailo-8 AI Processor (rev 01) 확인됨 (PCIe 0001:01:00.0)
+2. dmesg | grep hailo → 커널 메시지에 hailo 관련 로그 없음
+3. /dev/hailo* 확인 → 디바이스 노드 없음
+4. hailortcli 확인 → 미설치 (command not found)</div>
+
+  <div class="section-label label-result">Result</div>
+  <div class="content-block">Hailo-8 AI Processor가 PCIe 슬롯에 물리적으로 인식됨 (lspci 확인).
+단, 드라이버(/dev/hailo*)와 SDK(hailortcli)는 아직 미설치 상태.
+활용하려면 HailoRT 드라이버 및 SDK 설치가 필요.</div>
+</div>
+
+<!-- Entry 5 -->
+<div class="entry">
+  <div class="timestamp">2026-03-10 21:03</div>
+  <h2>HAILO Board Setup &amp; Driver Installation</h2>
+
+  <div class="section-label label-instruction">Instruction (Original)</div>
+  <div class="content-block">그 hailo 보드가 동작할 수 있도록 설정해줘.</div>
+
+  <div class="section-label label-analysis">Analysis</div>
+  <div class="content-block">Hailo-8 보드의 드라이버, 런타임, SDK, AI 모델을 설치하여 보드를 동작 가능한 상태로 만들기.
+Raspberry Pi OS(Debian trixie) 공식 저장소에 hailo-all 메타패키지가 존재하므로 이를 활용.</div>
+
+  <div class="section-label label-process">Process</div>
+  <div class="content-block">1. OS 확인: Debian 13 (trixie), 커널 6.12.62+rpt-rpi-2712
+2. apt-cache search hailo → 공식 저장소에 hailo-all 메타패키지 확인
+3. sudo apt-get install -y hailo-all 실행 (379MB 다운로드, 227개 패키지)
+4. 설치된 주요 패키지:
+   - hailort 4.23.0 (런타임 라이브러리)
+   - hailort-pcie-driver 4.23.0 (PCIe 드라이버)
+   - hailo-models 1.0.0-2 (AI 모델)
+   - hailo-tappas-core 5.1.0 (TAPPAS 플랫폼)
+   - python3-hailort (Python API)
+   - rpicam-apps-hailo-postprocess (카메라 AI 후처리)
+5. 설치 후 확인:
+   - /dev/hailo0 디바이스 노드 생성됨
+   - hailort.service active (running)
+   - hailortcli fw-control identify 성공</div>
+
+  <div class="section-label label-result">Result</div>
+  <div class="content-block">Hailo-8 보드 설정 완료!
+- Firmware Version: 4.23.0 (release,app,extended context switch buffer)
+- Board Name: Hailo-8
+- Device Architecture: HAILO8
+- Device: 0001:01:00.0
+- /dev/hailo0 활성화
+- hailort.service 정상 동작 중</div>
+</div>
+
+<!-- Entry 6 -->
+<div class="entry">
+  <div class="timestamp">2026-03-11 07:21</div>
+  <h2>USB Camera Test - Photo Capture</h2>
+
+  <div class="section-label label-instruction">Instruction (Original)</div>
+  <div class="content-block">현재 usb에 camera가 연결되어 있어. 인식이 되니?
+카메라가 정상인지 확인하기 위해 한장의 사진을 찍고 찍은 사진을 저장하고 설명해줘.</div>
+
+  <div class="section-label label-analysis">Analysis</div>
+  <div class="content-block">USB 카메라 인식 여부 확인 및 테스트 촬영 요청.
+v4l2-ctl, lsusb로 카메라 인식 확인 후, ffmpeg으로 사진 캡처하여 정상 동작 검증.</div>
+
+  <div class="section-label label-process">Process</div>
+  <div class="content-block">1. /dev/video* 및 v4l2-ctl --list-devices로 카메라 확인
+   → Logitech HD Pro Webcam C920 (usb-xhci-hcd.0-1) 인식됨
+   → /dev/video0, /dev/video1 할당
+2. lsusb 확인 → Bus 001 Device 002: ID 046d:082d Logitech, Inc. HD Pro Webcam C920
+3. ffmpeg으로 첫 촬영 시도 → 핑크색 노이즈 (카메라 초기화 전 프레임)
+4. 30프레임 건너뛴 후 재촬영 → 정상 이미지 획득 (640x480)
+5. camera_test.jpg로 저장 완료</div>
+
+  <div class="section-label label-result">Result</div>
+  <div class="content-block">USB 카메라 정상 동작 확인!
+- 카메라: Logitech HD Pro Webcam C920
+- 해상도: 640x480, 30fps
+- 촬영된 사진: 실내 서재 환경 (책장, 선반, 소품 등)
+<img src="history_img/screenshot_20260311_072100.png" alt="USB Camera test photo 2026-03-11 07:21"></div>
+</div>
+
+<!-- Entry 7 -->
+<div class="entry">
+  <div class="timestamp">2026-03-11 07:31</div>
+  <h2>Hailo-8 YOLOv8 + USB Camera Object Detection</h2>
+
+  <div class="section-label label-instruction">Instruction (Original)</div>
+  <div class="content-block">이제 이 카메라의 영상을 hailo 보드에서 동작하는 yolo와 연결시켜보고 싶어. hailo에서 yolo를 동작시켜서, bbox와 class가 표기되는 영상 한 5초 영상도 저장해주고, 영상은 history.html에 포함하지말고, 영상에서 한장의 사진만 성공하면 연결해줘.</div>
+
+  <div class="section-label label-analysis">Analysis</div>
+  <div class="content-block">USB 카메라(Logitech C920)의 실시간 영상을 Hailo-8 보드의 YOLOv8s 모델로 추론하여,
+바운딩박스와 클래스명이 오버레이된 5초 영상을 저장하고, 대표 스냅샷 1장을 history.html에 포함.
+rpicam-apps는 USB 카메라를 지원하지 않으므로, Python(hailo_platform + OpenCV)으로 직접 구현.</div>
+
+  <div class="section-label label-process">Process</div>
+  <div class="content-block">1. 모델 확인: yolov8s_h8.hef (입력 640x640x3 UINT8, 출력 NMS 80클래스)
+2. Hailo NMS 출력 형식 분석 — 클래스별 가변길이 (N, 5) 배열 [y_min, x_min, y_max, x_max, score]
+3. hailo_yolo_cam.py 작성:
+   - OpenCV로 USB 카메라 캡처
+   - hailo_platform InferVStreams로 Hailo-8 추론
+   - 바운딩박스 + 클래스명 + 신뢰도 오버레이
+   - 5초 동영상 MP4 저장 + 첫 감지 시 스냅샷 JPG 저장
+4. 실행 결과: 152 frames / 5.1초 = 30.0 FPS 달성</div>
+
+  <div class="section-label label-result">Result</div>
+  <div class="content-block">Hailo-8 YOLOv8s 실시간 객체 감지 성공!
+- 성능: 30.0 FPS (640x480 입력, Hailo-8 가속)
+- 감지 객체: person (0.91), bottle (0.44) 등
+- 영상: /home/pw/ws/hailo_yolo_output.mp4 (966KB, 5초)
+- 스냅샷: /home/pw/ws/hailo_yolo_snapshot.jpg
+<img src="history_img/screenshot_20260311_073100.png" alt="Hailo YOLOv8 detection snapshot 2026-03-11 07:31"></div>
+</div>
+
+<!-- Entry 8 -->
+<div class="entry">
+  <div class="timestamp">2026-03-11 07:38</div>
+  <h2>Flask YOLO Live Detection Server 구축</h2>
+
+  <div class="section-label label-instruction">Instruction (Original)</div>
+  <div class="content-block">이걸, flask 서버에서 전송하는걸로 하자. 웹브라우저에서는 video 자원을 선택할 수 있도록 하고, yolo의 결과를 볼수있도록.</div>
+
+  <div class="section-label label-analysis">Analysis</div>
+  <div class="content-block">Hailo YOLOv8 추론 결과를 Flask 웹 서버로 실시간 스트리밍.
+웹 UI에서 비디오 소스(USB 카메라 / MP4 파일) 선택 가능하고,
+MJPEG 스트림으로 bbox/class 오버레이 영상과 감지 결과 목록을 실시간 표시.</div>
+
+  <div class="section-label label-process">Process</div>
+  <div class="content-block">1. flask_yolo_app.py 작성:
+   - 추론 스레드: OpenCV 캡처 → Hailo-8 YOLOv8s 추론 → bbox 오버레이
+   - MJPEG 스트림 (/video_feed): 브라우저에 실시간 영상 전송
+   - REST API: /detections (감지 결과 JSON), /sources (소스 목록), /set_source (소스 변경)
+   - 웹 UI: 다크 테마, 영상 패널 + 사이드 패널(소스 선택, 감지 목록, FPS)
+2. 비디오 소스 동적 전환: 카메라 ↔ MP4 파일 (ws/ 폴더 자동 스캔)
+3. 서버 테스트: http://192.168.100.46:5000 접속 확인</div>
+
+  <div class="section-label label-result">Result</div>
+  <div class="content-block">Flask 실시간 객체 감지 서버 구축 완료!
+- 서버: flask_yolo_app.py (포트 5000)
+- 실행: python3 flask_yolo_app.py 또는 nohup으로 백그라운드
+- 기능: MJPEG 스트리밍, 비디오 소스 선택, 실시간 감지 결과 표시
+- API: /video_feed, /detections, /sources, /set_source</div>
+</div>
+
+<!-- Entry 9 -->
+<div class="entry">
+  <div class="timestamp">2026-03-11 07:45</div>
+  <h2>HAILO_YOLO_GUIDE.md 사용 가이드 작성</h2>
+
+  <div class="section-label label-instruction">Instruction (Original)</div>
+  <div class="content-block">방금 만든 기능의 사용법을 md 파일로 저장해주고, 그 내용도 history.html에 역시 잘 정리해줘.</div>
+
+  <div class="section-label label-analysis">Analysis</div>
+  <div class="content-block">Hailo YOLOv8 관련 도구(Flask 서버 + CLI 녹화)의 사용법을 마크다운 가이드로 정리.
+시스템 요구사항, 파일 구성, 사용법, API 엔드포인트, 트러블슈팅 포함.</div>
+
+  <div class="section-label label-process">Process</div>
+  <div class="content-block">1. HAILO_YOLO_GUIDE.md 작성 — 전체 사용 가이드
+2. history.html에 Flask 서버 구축(Entry 8) + 가이드 작성(Entry 9) 기록</div>
+
+  <div class="section-label label-result">Result</div>
+  <div class="content-block">HAILO_YOLO_GUIDE.md 작성 완료. 주요 내용:
+
+<strong>▶ 서버 시작</strong>
+<code>python3 flask_yolo_app.py</code> → http://&lt;라즈베리파이IP&gt;:5000 접속
+
+<strong>▶ 웹 UI 기능</strong>
+• 좌측: MJPEG 실시간 스트리밍 (bbox + 클래스명 + 신뢰도)
+• 우측 상단: 비디오 소스 선택 (USB 카메라 / MP4 파일)
+• 우측 하단: 감지 객체 목록, 클래스별 카운트, FPS
+
+<strong>▶ API 엔드포인트</strong>
+• GET /video_feed — MJPEG 스트림
+• GET /detections — 감지 결과 JSON
+• GET /sources — 비디오 소스 목록
+• POST /set_source — 소스 변경
+
+<strong>▶ CLI 녹화</strong>
+<code>python3 hailo_yolo_cam.py</code> → 5초 MP4 + 스냅샷 저장
+
+<strong>▶ 파일 구성</strong>
+• flask_yolo_app.py — Flask 웹 서버 (메인)
+• hailo_yolo_cam.py — CLI 녹화 버전
+• HAILO_YOLO_GUIDE.md — 이 가이드</div>
+</div>
+
+<!-- Entry 10 -->
+<div class="entry">
+  <div class="timestamp">2026-03-11 07:55</div>
+  <h2>architecture.html 코드 아키텍처 다이어그램 작성</h2>
+
+  <div class="section-label label-instruction">Instruction (Original)</div>
+  <div class="content-block">방금 만든 cam hailo flask 에 대한 코드 아키텍쳐를 architecture.html에 블록이나 다이어그램을 이용해서 잘 정리해줘.</div>
+
+  <div class="section-label label-analysis">Analysis</div>
+  <div class="content-block">카메라 + Hailo + Flask 시스템의 전체 코드 아키텍처를 시각적 다이어그램으로 정리.
+하드웨어 블록도, 추론 파이프라인, 스레딩 모델, NMS 출력 형식, API, 파일 구조 등을 CSS 기반 블록 다이어그램으로 표현.</div>
+
+  <div class="section-label label-process">Process</div>
+  <div class="content-block">1. flask_yolo_app.py, hailo_yolo_cam.py 전체 코드 분석
+2. architecture.html 작성 — 8개 섹션 구성:
+   - System Overview (하드웨어 블록도)
+   - Inference Pipeline (프레임 처리 6단계)
+   - NMS Output Format (Hailo 출력 구조)
+   - Threading Model (추론/Flask/클라이언트 3스레드)
+   - REST API Endpoints (5개 엔드포인트 표)
+   - File Structure (파일+함수 트리)
+   - Source Switching Flow (소스 전환 시퀀스)
+   - Key Dependencies (라이브러리 의존성)</div>
+
+  <div class="section-label label-result">Result</div>
+  <div class="content-block">architecture.html 작성 완료! 주요 다이어그램:
+
+• <strong>Hardware Block</strong>: Camera → RPi5 → Hailo-8 → Flask → Browser
+• <strong>Pipeline</strong>: Capture → Preprocess(640x640) → Hailo Infer → Parse NMS → Draw → MJPEG Stream
+• <strong>Threading</strong>: Inference Thread(daemon) ↔ DetectionState(shared) ↔ Flask Thread
+• <strong>NMS 출력</strong>: 80 클래스 × 가변 감지 수, [y_min, x_min, y_max, x_max, score]
+
+파일: <a href="architecture.html">architecture.html</a></div>
+</div>
+
+<!-- Entry 11 -->
+<div class="entry">
+  <div class="timestamp">2026-03-12 09:00</div>
+  <h2>Flask YOLO 스트리밍 끊김 진단 및 파이프라인 분리 최적화</h2>
+
+  <div class="section-label label-instruction">Instruction (Original)</div>
+  <div class="content-block">실제 usb 카메라의 영상으로 확인해보니 많이 끊어지는 현상이 있는데, 이게 yolo를 동작하기 위해 시스템 리소스를 많이 소모해서인지, flask 서버에서 영상을 보내는것이 부담되어서 인지를 모르겠네.</div>
+
+  <div class="section-label label-analysis">Analysis</div>
+  <div class="content-block">USB 카메라 실시간 스트리밍 시 영상 끊김 현상 발생.
+원인 후보:
+1. YOLO 추론이 프레임 캡처를 블로킹 (캡처와 추론이 동일 루프)
+2. Flask MJPEG 스트리밍의 JPEG 인코딩 부하
+3. 카메라 자체의 프레임 공급 속도 한계
+
+기존 코드의 구조적 문제:
+- 캡처 → 추론 → 오버레이가 하나의 while 루프에서 순차 실행
+- 추론이 끝나야 다음 프레임 캡처 가능 (파이프라인 병목)
+- MJPEG 제너레이터가 매번 JPEG 인코딩 수행 (클라이언트마다 중복)
+- 프레임 스킵 없이 모든 프레임 처리 시도</div>
+
+  <div class="section-label label-process">Process</div>
+  <div class="content-block">1. 기존 flask_yolo_app.py의 단일 루프 구조 분석 완료
+2. 3-스레드 분리 아키텍처로 재설계:
+   - Thread 1 (Capture): 카메라에서 최대 속도로 프레임 캡처, 최신 프레임만 유지
+   - Thread 2 (Inference): 최신 프레임을 가져와 YOLO 추론, 중복 프레임 스킵
+   - Thread 3 (Flask): 미리 인코딩된 JPEG 버퍼를 클라이언트에 전송
+3. 진단 기능 추가:
+   - Capture FPS / Inference FPS / 추론 시간(ms) 분리 표시
+   - "Passthrough" 모드: YOLO 없이 카메라 raw 영상만 전송 (병목 비교용)
+   - 자동 병목 진단 메시지 (캡처 FPS vs 추론 FPS 비교)
+4. 최적화 사항:
+   - JPEG 인코딩을 추론 스레드에서 1회만 수행 (pre-encode)
+   - cv2.CAP_PROP_BUFFERSIZE=1로 카메라 버퍼 최소화 (지연 감소)
+   - 프레임 시퀀스 번호로 중복 추론 방지
+   - FPS 카운터 5초마다 리셋 (최근 평균값)</div>
+
+  <div class="section-label label-result">Result</div>
+  <div class="content-block">flask_yolo_app.py 전면 개선 완료.
+
+<strong>▶ 진단 방법:</strong>
+1. 서버 실행: <code>python3 flask_yolo_app.py</code>
+2. 브라우저에서 접속 → 상단에 Capture FPS / Infer FPS / Latency 표시
+3. 우측 "Mode" 에서 <b>Passthrough</b> 클릭 → YOLO 없이 카메라 원본 영상 확인
+4. Passthrough에서도 끊기면 → 카메라/USB/Flask 문제
+5. Passthrough는 부드럽고 YOLO만 느리면 → 추론 병목
+
+<strong>▶ 주요 개선:</strong>
+• 3스레드 분리: 캡처/추론/스트리밍 독립 동작
+• JPEG pre-encode: 스트리밍 클라이언트 수에 관계없이 1회 인코딩
+• 카메라 버퍼 최소화: 오래된 프레임 지연 방지
+• 프레임 스킵: 추론이 느려도 최신 프레임만 처리</div>
+</div>
+
+<!-- Entry 12 -->
+<div class="entry">
+  <div class="timestamp">2026-03-12 (Entry 12)</div>
+
+  <div class="section-label label-instruction">Instruction</div>
+  <div class="content-block">방금 작업 확인했는데 yolo를 안쓰면 느려지지 않고 30fps가 나오고, yolo를 사용하면 13fps 정도가 되네. 1,2,3번 추진하자:
+1. 입력 해상도 축소
+2. 프레임 스킵 전략 (N프레임마다 추론, 나머지는 이전 bbox 오버레이)
+3. JPEG 인코딩 최적화</div>
+
+  <div class="section-label label-analysis">Analysis</div>
+  <div class="content-block">Passthrough 30fps → YOLO 13fps 확인. 추론(~30ms/frame) + 리사이즈 + JPEG 인코딩이 병목.
+3가지 최적화를 동시 적용하여 실질 스트리밍 FPS를 끌어올린다:
+<ul>
+  <li><b>해상도 축소:</b> 캡처 640x480 → 320x240으로 줄여 리사이즈/복사/인코딩 비용 감소</li>
+  <li><b>프레임 스킵:</b> 매 2프레임 중 1회만 YOLO 추론, 나머지는 이전 bbox 재사용 → 이론상 2배 FPS</li>
+  <li><b>JPEG 최적화:</b> 품질 80→65, 출력 최대폭 480px로 리사이즈 후 인코딩, INTER_NEAREST 사용</li>
+</ul></div>
+
+  <div class="section-label label-process">Process</div>
+  <div class="content-block">
+<ol>
+  <li>상수 추가: <code>CAPTURE_WIDTH=320, CAPTURE_HEIGHT=240, INFER_EVERY_N=2, JPEG_QUALITY=65, OUTPUT_MAX_WIDTH=480</code></li>
+  <li>capture_loop: 카메라 해상도를 320x240으로 설정</li>
+  <li>inference_loop: skip_counter 도입 — INFER_EVERY_N 프레임마다만 YOLO 실행, 스킵 프레임은 <code>get_last_detections()</code>로 이전 결과 재사용</li>
+  <li>YOLO 입력 리사이즈에 <code>INTER_NEAREST</code> 사용 (INTER_LINEAR 대비 빠름)</li>
+  <li>put_output: JPEG 인코딩 전 OUTPUT_MAX_WIDTH로 리사이즈 + JPEG_QUALITY 65 적용</li>
+  <li>OSD 텍스트를 작은 폰트로 조정 (320x240 프레임에 맞게)</li>
+</ol></div>
+
+  <div class="section-label label-result">Result</div>
+  <div class="content-block">flask_yolo_app.py에 3가지 성능 최적화 적용 완료.
+
+<strong>▶ 변경 요약:</strong>
+<table style="border-collapse:collapse;width:100%;margin:8px 0;">
+  <tr style="background:#e3f2fd;"><th style="padding:4px 8px;text-align:left;">항목</th><th style="padding:4px 8px;">Before</th><th style="padding:4px 8px;">After</th></tr>
+  <tr><td style="padding:4px 8px;">캡처 해상도</td><td style="padding:4px 8px;text-align:center;">640x480</td><td style="padding:4px 8px;text-align:center;">320x240</td></tr>
+  <tr><td style="padding:4px 8px;">YOLO 추론 빈도</td><td style="padding:4px 8px;text-align:center;">매 프레임</td><td style="padding:4px 8px;text-align:center;">2프레임당 1회</td></tr>
+  <tr><td style="padding:4px 8px;">JPEG 품질</td><td style="padding:4px 8px;text-align:center;">80</td><td style="padding:4px 8px;text-align:center;">65</td></tr>
+  <tr><td style="padding:4px 8px;">출력 최대폭</td><td style="padding:4px 8px;text-align:center;">원본 그대로</td><td style="padding:4px 8px;text-align:center;">480px</td></tr>
+  <tr><td style="padding:4px 8px;">리사이즈 보간</td><td style="padding:4px 8px;text-align:center;">INTER_LINEAR</td><td style="padding:4px 8px;text-align:center;">INTER_NEAREST</td></tr>
+</table>
+
+<strong>▶ 기대 효과:</strong> 프레임 스킵만으로 ~26fps, 해상도+JPEG 최적화 추가 시 추가 향상 기대.
+상수 값(INFER_EVERY_N, CAPTURE_WIDTH 등)을 조절하여 품질⇄속도 트레이드오프 가능.</div>
+</div>
+
+<!-- Entry 13 -->
+<div class="entry">
+  <div class="timestamp">2026-03-12 (Entry 13)</div>
+
+  <div class="section-label label-instruction">Instruction</div>
+  <div class="content-block">architecture.html에서 3번 Hailo NMS Output Format의 글상자의 내용과 6 file structure의 내용을 보면 글자의 구성이 이상해 줄바꿈이 적절히 되지 않은 것 같아. 그리고, flask에서 보여주는 영상 화질에 비해 너무 커서 흐려보여. 웹에서 보는 영상은 지금보다 가로 세로를 반으로 줄이자.</div>
+
+  <div class="section-label label-analysis">Analysis</div>
+  <div class="content-block">1. architecture.html의 NMS output box와 file tree가 <code>white-space: pre</code> 없이 monospace 텍스트를 표시하여 줄바꿈이 무시되고 한 줄로 뭉쳐 보이는 문제.
+2. Flask 웹 UI에서 영상이 640x480 원본보다 크게 확대 표시되어 흐릿하게 보이는 문제 → 320x240으로 축소.</div>
+
+  <div class="section-label label-process">Process</div>
+  <div class="content-block">
+<ol>
+  <li>architecture.html: <code>.nms-box</code> CSS에 <code>white-space: pre</code> 추가 → NMS 출력 포맷 줄바꿈 정상 표시</li>
+  <li>architecture.html: <code>.file-tree</code> CSS에 <code>white-space: pre</code> 추가 → 파일 구조 트리 줄바꿈 정상 표시</li>
+  <li>flask_yolo_app.py: <code>.video-panel img</code> 스타일을 <code>width:320px; height:240px</code>로 변경 (기존 width:100% 에서 절반 크기로 고정)</li>
+</ol></div>
+
+  <div class="section-label label-result">Result</div>
+  <div class="content-block">
+<strong>▶ architecture.html:</strong> NMS Output Format 박스와 File Structure 트리에서 줄바꿈이 정상적으로 표시됨.<br>
+<strong>▶ Flask 웹 UI:</strong> 영상 표시 크기 320x240px로 축소 — 원본 해상도에 맞게 선명하게 표시.</div>
+</div>
+
+</body>
+</html>
